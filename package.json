@@ -1,0 +1,11 @@
+
+  {
+    "name": "kahn-bahn",
+    "version": "1.0.0",
+    "scripts": {
+      "setup": "npm run setup:client && npm run setup:server",
+      "setup:client": "cd kahn-bahn.client && npm i",
+      "setup:server": "cd kahn-bahn.server && npm i"
+    }
+  }
+  
