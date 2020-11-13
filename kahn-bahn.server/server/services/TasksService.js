@@ -16,7 +16,8 @@ class TasksService {
 
   async deleteTask(userInfo, taskId) {
     const task = await dbContext.Tasks.findOneAndDelete({ profile: userInfo, _id: taskId })
-    if (!task) {
+    const comment = await dbContext.Comments.deleteMany({ task: taskId })
+    if (!task || !comment) {
       throw new BadRequest('invalid id')
     }
     return task

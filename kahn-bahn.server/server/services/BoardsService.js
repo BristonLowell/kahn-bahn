@@ -18,7 +18,8 @@ class BoardsService {
     const board = await dbContext.Boards.findOneAndDelete({ profile: userInfo, _id: boardId })
     const lists = await dbContext.Lists.deleteMany({ board: boardId })
     const task = await dbContext.Tasks.deleteMany({ board: boardId })
-    if (!board || !lists || !task) {
+    const comment = await dbContext.Comments.deleteMany({ board: boardId })
+    if (!board || !lists || !task || !comment) {
       throw new BadRequest('invalid id')
     }
     return {

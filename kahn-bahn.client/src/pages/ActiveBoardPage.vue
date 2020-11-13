@@ -40,6 +40,7 @@ import { AppState } from '../AppState'
 import { profileService } from '../services/ProfileService'
 import { taskService } from '../services/TaskService'
 import { boardService } from '../services/BoardService'
+import { commentService } from '../services/CommentService'
 
 export default {
   name: 'ActiveBoard',
@@ -56,7 +57,9 @@ export default {
       await profileService.getProfile()
       await listService.getLists(route.params.boardId)
       await taskService.getTasks(route.params.boardId)
+      await taskService.getTasks(route.params.boardId)
       await boardService.getActiveBoard(route.params.boardId)
+      await commentService.getComments(route.params.boardId)
     })
     return {
       state,
