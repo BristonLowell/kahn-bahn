@@ -2,8 +2,12 @@ import { dbContext } from '../db/DbContext'
 import { BadRequest } from '../utils/Errors'
 
 class BoardsService {
-  async getAllBoards(query = {}) {
-    return await dbContext.Boards.find(query).populate('profile')
+  async getAllBoards(id) {
+    const boards = await dbContext.Boards.find({ profile: id }).populate('profile')
+    if (!boards) {
+      throw new BadRequest('invalid id')
+    }
+    return boards
   }
 
   async createBoard(newBoard) {
@@ -12,10 +16,16 @@ class BoardsService {
 
   async deleteBoard(userInfo, boardId) {
     const board = await dbContext.Boards.findOneAndDelete({ profile: userInfo, _id: boardId })
-    if (!board) {
+    const lists = await dbContext.Lists.deleteMany({ board: boardId })
+    const task = await dbContext.Tasks.deleteMany({ board: boardId })
+    if (!board || !lists || !task) {
       throw new BadRequest('invalid id')
     }
-    return board
+    return {
+      board,
+      lists,
+      task
+    }
   }
 
   async editBoard(userInfo, boardId, editedBoard) {

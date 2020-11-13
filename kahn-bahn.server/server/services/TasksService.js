@@ -2,8 +2,8 @@ import { dbContext } from '../db/DbContext'
 import { BadRequest } from '../utils/Errors'
 
 class TasksService {
-  async getTasksByListId(id) {
-    const post = await dbContext.Tasks.find({ list: id }).populate('list').populate('profile', '-updatedAt -subs')
+  async getTasksByBoardId(id) {
+    const post = await dbContext.Tasks.find({ board: id }).populate('list').populate('profile', '-updatedAt -subs')
     if (!post) {
       throw new BadRequest('made an error')
     }

@@ -11,7 +11,7 @@ export class BoardsController extends BaseController {
       .use(Auth0Provider.getAuthorizedUserInfo)
       .get('', this.getAllBoards)
       .get('/:boardId/lists', this.getListsByBoard)
-      .get('/:boardId/lists/:listId/tasks', this.getTasksByListId)
+      .get('/:boardId/tasks', this.getTasksByBoardId)
       .post('', this.createBoard)
       .post('/:boardId/lists', this.createList)
       .post('/:boardId/lists/:listId/tasks', this.createTask)
@@ -25,7 +25,7 @@ export class BoardsController extends BaseController {
 
   async getAllBoards(req, res, next) {
     try {
-      res.send(await boardsService.getAllBoards())
+      res.send(await boardsService.getAllBoards(req.userInfo.id))
     } catch (error) {
       next(error)
     }
@@ -33,6 +33,7 @@ export class BoardsController extends BaseController {
 
   async createBoard(req, res, next) {
     try {
+      req.body.profile = req.userInfo.id
       res.send(await boardsService.createBoard(req.body))
     } catch (error) {
       next(error)
@@ -49,15 +50,17 @@ export class BoardsController extends BaseController {
 
   async createList(req, res, next) {
     try {
+      req.body.profile = req.userInfo.id
+      req.body.board = req.params.boardId
       res.send(await listsService.createList(req.body))
     } catch (error) {
       next(error)
     }
   }
 
-  async getTasksByListId(req, res, next) {
+  async getTasksByBoardId(req, res, next) {
     try {
-      res.send(await tasksService.getTasksByListId(req.params.listId))
+      res.send(await tasksService.getTasksByBoardId(req.params.boardId))
     } catch (error) {
       next(error)
     }
@@ -65,6 +68,9 @@ export class BoardsController extends BaseController {
 
   async createTask(req, res, next) {
     try {
+      req.body.profile = req.userInfo.id
+      req.body.board = req.params.boardId
+      req.body.list = req.params.listId
       res.send(await tasksService.createTask(req.body))
     } catch (error) {
       next(error)

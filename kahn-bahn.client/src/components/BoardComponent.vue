@@ -1,23 +1,21 @@
 <template>
-  <div class="col-6">
-    <div class="col-5 offset-3">
-      <h1 class="display-3 underline mb-2 ml-4">
-        My Boards
-      </h1>
-    </div>
-    <div class="board-component col-11 m-4 border border-dark shadow">
-      <h1> {{ board.title }}</h1>
-    </div>
-  </div>
-  <div class="col-6">
-    <div class="col-12">
-      Anything I want
-    </div>
+  <div class="col-12">
+    <router-link :to="{name: 'ActiveBoard', params: {boardId: board.id}}">
+      <div class="board-component col-11 m-4 border border-dark shadow">
+        <div class="d-flex justify-content-between align-items-center">
+          <h1>{{ board.title }}</h1>
+          <button class="btn btn-danger m-3" @click.prevent="deleteBoard">
+            X
+          </button>
+        </div>
+      </div>
+    </router-link>
   </div>
 </template>
 
 <script>
 import { computed } from 'vue'
+import { boardService } from '../services/BoardService'
 export default {
   name: 'BoardComponent',
   props: {
@@ -25,7 +23,11 @@ export default {
   },
   setup(props) {
     return {
-      board: computed(() => props.boardProp)
+      board: computed(() => props.boardProp),
+      deleteBoard() {
+        boardService.deleteBoard(props.boardProp.id)
+      }
+
     }
   },
   components: {}
@@ -33,11 +35,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.underline{
-  // text-decoration-line: underline;
-  // text-decoration-color: black;
-  // text-decoration-style: solid;
-  text-decoration: none;
-  border-bottom: 15px solid black;
-}
+
 </style>

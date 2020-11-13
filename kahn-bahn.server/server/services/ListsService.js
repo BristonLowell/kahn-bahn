@@ -15,7 +15,8 @@ class ListsService {
 
   async deleteList(userInfo, listId) {
     const list = await dbContext.Lists.findOneAndDelete({ profile: userInfo, _id: listId })
-    if (!list) {
+    const task = await dbContext.Tasks.deleteMany({ list: listId })
+    if (!list || !task) {
       throw new BadRequest('invalid id')
     }
     return list
